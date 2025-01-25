@@ -22,6 +22,6 @@ jobs:
         env:
           REPO: self
           BRANCH: gh-pages 
-          FOLDER: build
+          FOLDER: dist
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SQUASH_HISTORY: true
