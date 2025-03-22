@@ -55,7 +55,7 @@ export default function BaselineInterface(props: { children?: React.ReactNode })
     // Send the message to ChatGPT
     (async () => {
       const stream = await openai.chat.completions.create({
-        model: 'gpt-4o',
+        model: import.meta.env.VITE_OPENAI_CHAT_MODEL,
         messages: messages,
         stream: true,
       });

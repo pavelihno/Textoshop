@@ -5,9 +5,7 @@ import { useModelStore } from '../model/Model';
 import { useStudyStore } from "../study/StudyModel";
 
 export default function Launcher() {
-  const [accessKey, setAccessKey] = useState('');
   const [pid, setPid] = useState(-1);
-  const setOpenAIKey = useModelStore((state) => state.setOpenAIKey);
   const resetModel = useModelStore((state) => state.reset);
   const resetStudyModel = useStudyStore((state) => state.reset);
 
@@ -33,7 +31,7 @@ export default function Launcher() {
 
     useModelStore.getState().refreshTextFields();
 
-    window.location.hash = '/free-form' + `?k=${btoa(accessKey)}`;
+    window.location.hash = '/free-form';
 }
 
   return <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
@@ -41,20 +39,9 @@ export default function Launcher() {
         <CardHeader><span style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 5, fontWeight: 600}}><FaPaintBrush /> Textoshop</span></CardHeader>
         <Divider />
         <CardBody>
-            <p>To run the examples below, please paste an OpenAI API key. You can obtain one from <a href="https://platform.openai.com/account/api-keys">here</a>.</p>
-            <Input variant="faded" label="API Key" placeholder="sk-..." style={{marginTop: 10}}
-            onChange={(e) => {
-                setAccessKey(e.target.value);
-                setOpenAIKey(e.target.value);
-            }}
-            ></Input>
-        </CardBody>
-        <Divider />
-        <CardBody>
             <span style={{fontWeight: 800}}>Shortcuts to try out Textoshop on examples</span>
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 40, marginTop: 10}}>
-                <Button 
-                isDisabled={accessKey.length === 0}
+                <Button
                     onClick={() => {
                         startExample(`Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, “and what is the use of a book,” thought Alice “without pictures or conversations?”
 
@@ -71,7 +58,6 @@ Either the well was very deep, or she fell very slowly, for she had plenty of ti
                 >Alice in Wonderland</Button>
                 
                 <Button
-                isDisabled={accessKey.length === 0}
                     onClick={() => {
                         startExample(`Artificial intelligence (AI), in its broadest sense, is intelligence exhibited by machines, particularly computer systems. It is a field of research in computer science that develops and studies methods and software that enable machines to perceive their environment and use learning and intelligence to take actions that maximize their chances of achieving defined goals. Such machines may be called AIs.
 
@@ -88,7 +74,6 @@ To reach these goals, AI researchers have adapted and integrated a wide range of
                 >Wikipedia "Artificial Intelligence"</Button>
 
                 <Button
-                isDisabled={accessKey.length === 0}
                     onClick={() => {
                         startExample("");
                     }}
@@ -99,7 +84,7 @@ To reach these goals, AI researchers have adapted and integrated a wide range of
         <CardBody>
             <span style={{fontWeight: 800}}>Run the study</span>
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'left', alignItems: 'center', gap: 40, marginTop: 10}}>
-                <Select isDisabled={accessKey.length === 0}
+                <Select
                 variant="faded" label="Participant ID" className="max-w-xs" 
                 onChange={(e) => setPid(parseInt(e.target.value))}>
                     {
@@ -107,11 +92,10 @@ To reach these goals, AI researchers have adapted and integrated a wide range of
                     }
                 </Select>
                 <Button
-                    isDisabled={accessKey.length === 0 || pid === -1}
                     onClick={() => {
                         resetModel();
                         resetStudyModel();
-                        window.location.hash = '/study' + '?pid=' + pid + `&k=${btoa(accessKey)}`;
+                        window.location.hash = '/study' + '?pid=' + pid;
                     }}
                 >Start</Button>
             </div>

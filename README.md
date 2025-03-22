@@ -15,20 +15,41 @@ Under the hood, Textoshop uses a large language model (LLM) to power many of the
 
 
 ## How to build and run
-The code is written in TypeScript and uses React and Vite. To build and run the code, you will need to have Node.js installed on your machine. You can download it [here](https://nodejs.org/en/download/).
-First install the dependencies:
+The code is written in TypeScript and uses React and Vite. You'll need Docker installed on your machine to run Textoshop. You can download it [here](https://www.docker.com/products/docker-desktop/).
+
+### 1. Set up environment variables
+First, create your environment file by copying the example:
 ```bash
-npm install
+cp .env.example .env
 ```
-Then build the code:
+
+Edit the `.env` file and configure the following settings:
+- Add your OpenAI API key (required): `VITE_OPENAI_API_KEY`
+- Optionally adjust the AI models:
+  - `VITE_OPENAI_RESIZER_MODEL` (for text resizing)
+  - `VITE_OPENAI_CHAT_MODEL` (for chat interface and other operations)
+
+### 2. Build the Docker image
 ```bash
-npm run dev
+docker build -t textoshop .
 ```
+
+### 3. Run the container
+```bash
+docker run --name textoshop-container -p 5173:5173 -v $(pwd)/.env:/app/.env textoshop
+```
+
+The application will be available at http://localhost:5173
+
+### 4. Managing the container
+- To stop the container: `docker stop textoshop-container`
+- To restart it later: `docker start textoshop-container`
+- To view logs: `docker logs textoshop-container`
 
 
 ## How to use?
-After entering your OpenAI API key, you can test Textoshop using the shortcuts or you can run the study.
-Note that the system was tested and developped for recent versions of **Google Chrome** or **Mozilla Firefox**.
+After configuring your OpenAI API key in the `.env` file, you can test Textoshop using the shortcuts or you can run the study.
+Note that the system was tested and developed for recent versions of **Google Chrome** or **Mozilla Firefox**.
 
 
 ## How to get an OpenAI API key?

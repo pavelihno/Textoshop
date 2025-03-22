@@ -21,23 +21,20 @@ import { useUndoModelStore } from './UndoModel';
 import { SlateUtils } from './utils/SlateUtils';
 import { TextAnimationUtils } from './utils/TextAnimationUtils';
 import { TextLayerUtils } from './utils/TextLayerUtils';
-
-
-// Get the key from the URL parameters
-const hashSplitted = window.location.hash.split("?");
-const search = hashSplitted[hashSplitted.length-1]
-const params = new URLSearchParams(search);
-const key = params.get('k');
-
+    
 let openaiKey = ""
-if (!key) {
-    if ("VITE_OPENAI_API_KEY" in import.meta.env) {
-        openaiKey = import.meta.env.VITE_OPENAI_API_KEY;
-    } /*else {
-        throw new Error("No key provided in the URL parameters");
-    }*/
+if ("VITE_OPENAI_API_KEY" in import.meta.env) {
+    openaiKey = import.meta.env.VITE_OPENAI_API_KEY;
 } else {
-    openaiKey = atob(key)
+    throw new Error("No VITE_OPENAI_API_KEY provided in the .env");
+}
+
+if (!("VITE_OPENAI_CHAT_MODEL" in import.meta.env)) {
+    throw new Error("No VITE_OPENAI_CHAT_MODEL provided in the .env");
+}
+
+if (!("VITE_OPENAI_RESIZER_MODEL" in import.meta.env)) {
+    throw new Error("No VITE_OPENAI_RESIZER_MODEL provided in the .env");
 }
 
 export const openai = new OpenAI({
@@ -271,7 +268,7 @@ export const useModelStore = create<ModelState & ModelAction>()((set, get) => ({
 
         if (executablePrompt.response_format) {
             const completion = openai.beta.chat.completions.parse({
-                model: executablePrompt.model ? executablePrompt.model : 'gpt-4o',
+                model: executablePrompt.model ? executablePrompt.model : import.meta.env.VITE_OPENAI_CHAT_MODEL,
                 messages: [{ role: 'user', content: executablePrompt.prompt }],
                 temperature: 0,
                 response_format: zodResponseFormat(executablePrompt.response_format.zodObject, executablePrompt.response_format.name)
